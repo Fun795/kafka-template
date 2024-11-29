@@ -12,8 +12,8 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
       KAFKA_OPTS: -Djava.security.auth.login.config=/etc/kafka/secrets/zookeeper_jaas.conf
         -Dzookeeper.authProvider.1=org.apache.zookeeper.server.auth.SASLAuthenticationProvider
-        -DrequireClientAuthScheme=sasl
         -Dzookeeper.allowSaslFailedClients=false
+        -Dzookeeper.requireClientAuthScheme=sasl
     volumes:
       - ./security:/etc/kafka/secrets
 
@@ -27,19 +27,20 @@ services:
       - 9092:9092
       - 29092:29092
     hostname: kafka
+    container_name: kafka
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENERS: PLAINTEXT://kafka:29092,EXTERNAL://0.0.0.0:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,EXTERNAL://${EXTERNAL_HOST}:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_LISTENERS: BROKER://kafka:29092,EXTERNAL://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: BROKER://kafka:29092,EXTERNAL://${EXTERNAL_HOST}:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: BROKER:SASL_PLAINTEXT,EXTERNAL:SASL_PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
-      # enables 2-way authentication
-      KAFKA_SSL_CLIENT_AUTH: "required"
-      KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: "HTTPS"
+      KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
+      KAFKA_INTER_BROKER_LISTENER_NAME: BROKER
+      # sasl configuration
+      KAFKA_LISTENER_NAME_BROKER_SASL_ENABLED_MECHANISMS: PLAIN
+      KAFKA_LISTENER_NAME_EXTERNAL_SASL_ENABLED_MECHANISMS: PLAIN
       KAFKA_OPTS: -Djava.security.auth.login.config=/etc/kafka/secrets/broker_jaas.conf
-      KAFKA_SSL_PRINCIPAL_MAPPING_RULES: RULE:^CN=(.*?),OU=TEST.*$$/$$1/,DEFAULT
     volumes:
       - ./security:/etc/kafka/secrets
 
@@ -53,19 +54,20 @@ services:
       - 9093:9093
       - 29093:29092
     hostname: kafka2
+    container_name: kafka2
     environment:
       KAFKA_BROKER_ID: 2
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENERS: PLAINTEXT://kafka2:29093,EXTERNAL://0.0.0.0:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka2:29093,EXTERNAL://${EXTERNAL_HOST}:9093
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_LISTENERS: BROKER://kafka2:29093,EXTERNAL://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: BROKER://kafka2:29093,EXTERNAL://${EXTERNAL_HOST}:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: BROKER:SASL_PLAINTEXT,EXTERNAL:SASL_PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
-      # enables 2-way authentication
-      KAFKA_SSL_CLIENT_AUTH: "required"
-      KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: "HTTPS"
+      KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
+      KAFKA_INTER_BROKER_LISTENER_NAME: BROKER
+      # sasl configuration
+      KAFKA_LISTENER_NAME_BROKER_SASL_ENABLED_MECHANISMS: PLAIN
+      KAFKA_LISTENER_NAME_EXTERNAL_SASL_ENABLED_MECHANISMS: PLAIN
       KAFKA_OPTS: -Djava.security.auth.login.config=/etc/kafka/secrets/broker_jaas.conf
-      KAFKA_SSL_PRINCIPAL_MAPPING_RULES: RULE:^CN=(.*?),OU=TEST.*$$/$$1/,DEFAULT
     volumes:
       - ./security:/etc/kafka/secrets
 
