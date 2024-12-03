@@ -58,7 +58,7 @@ services:
       - kafkanet
     ports:
       - 9093:9093
-      - 29093:29092
+      - 29093:29093
     hostname: kafka2
     container_name: kafka2
     environment:
