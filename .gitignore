@@ -1,1 +1,3 @@
 .idea
+./security/admin-client.properties
+./security/jaas.conf
