@@ -43,9 +43,10 @@ for TOPIC in $TOPICS; do
                 --bootstrap-server kafka1:9092 \
                 --command-config /etc/kafka/admin-client.properties \
                 --remove \
-                --principal "User:$USER" \
+                --allow-principal "User:$USER" \
                 --operation "$OPERATION" \
-                --topic "$TOPIC"
+                --topic "$TOPIC" \
+                --force
     fi
 done
 

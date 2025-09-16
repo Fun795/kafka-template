@@ -40,7 +40,9 @@ elif [[ "$ACTION" == "remove" ]]; then
             --bootstrap-server kafka1:9092 \
             --command-config /etc/kafka/admin-client.properties \
             --remove \
+            --allow-principal
             --principal "User:$USER" \
             --operation "$OPERATION" \
-            --topic "$TOPIC"
+            --topic "$TOPIC" \
+            --force
 fi
