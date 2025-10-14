@@ -8,7 +8,7 @@ OPERATION=$4     # операция: Read, Write, All
 # Проверка обязательных аргументов
 if [[ -z "$USER" || -z "$TOPIC" || -z "$ACTION" || -z "$OPERATION" ]]; then
     echo "Использование: $0 <user> <topic> <add|remove> <Read|Write|All>"
-    echo "Пример: $0 erc-user t1_1C_organization add Read"
+    echo "Пример: $0 1c_erc t1_1C_organization add Read"
     exit 1
 fi
 
@@ -42,8 +42,7 @@ elif [[ "$ACTION" == "remove" ]]; then
             --bootstrap-server kafka1:9092 \
             --command-config /etc/kafka/admin-client.properties \
             --remove \
-            --allow-principal
-            --principal "User:$USER" \
+            --allow-principal "User:$USER" \
             --operation "$OPERATION" \
             --topic "$TOPIC" \
             --force
